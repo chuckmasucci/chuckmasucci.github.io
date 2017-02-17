@@ -1725,7 +1725,7 @@
 	                ),
 	                m(
 	                    "a",
-	                    { "class": "btn btn--green btn--box-shadow" },
+	                    { "class": "btn btn--green btn--box-shadow", href: "#" },
 	                    m(
 	                        "span",
 	                        { "class": "btn__copy" },
