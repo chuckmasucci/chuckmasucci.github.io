@@ -49,13 +49,13 @@
 	// index.js
 	var m = __webpack_require__(1);
 	var Home = __webpack_require__(6);
-	var Nav = __webpack_require__(7);
+	var Layout = __webpack_require__(7);
+	var Nav = __webpack_require__(8);
 
 	m.route(document.body, "/", {
 	    "/": {
 	        render: function render() {
-	            return [m(Home), m(Nav)];
-	            // return m(Home);
+	            return m(Layout, [m(Home), m(Nav)]);
 	        }
 	    }
 	});
@@ -1691,39 +1691,24 @@
 
 	// Home
 	var m = __webpack_require__(1);
-	var Nav = __webpack_require__(7);
 
 	var HomeView = {
 	    // oninit: function () {}
 	    view: function view() {
 	        return m(
-	            "div",
-	            { id: "main", "class": "main" },
-	            m(
-	                "a",
-	                { href: "#", onclick: this.openNav, "class": "menu" },
-	                m(
-	                    "svg",
-	                    { xmlns: "http://www.w3.org/2000/svg", width: "30", height: "23", viewBox: "0 0 95.2 74.6" },
-	                    m("path", { d: "M5.3 74.6C2.4 74.6 0 72.3 0 69.4c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", style: "fill-opacity:0.07;stroke-width:0.08" }),
-	                    m("path", { d: "M5.3 12C2.4 12 0 9.7 0 6.8c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", style: "fill-opacity:0.07;stroke-width:0.08" }),
-	                    m("path", { d: "M5.3 43.3C2.4 43.3 0 41 0 38.1c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", style: "fill-opacity:0.07;stroke-width:0.08" }),
-	                    m("path", { "class": "menu__hamburger-line", d: "M5.3 73C2.4 73 0 70.7 0 67.8c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", "stroke-width": "0.08" }),
-	                    m("path", { "class": "menu__hamburger-line", d: "M5.3 10.4C2.4 10.4 0 8.1 0 5.2c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", "stroke-width": "0.08" }),
-	                    m("path", { "class": "menu__hamburger-line", d: "M5.3 41.7C2.4 41.7 0 39.4 0 36.5c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", "stroke-width": "0.08" })
-	                )
-	            ),
+	            "section",
+	            { id: "content-container", "class": "home" },
 	            m(
 	                "div",
-	                { "class": "main__title" },
+	                { "class": "home__title" },
 	                m(
 	                    "h2",
-	                    { "class": "main__title__name main__title--text-shadow--size-8" },
+	                    { "class": "home__title__name home__title--text-shadow--size-8" },
 	                    "CHUCK MASUCCI"
 	                ),
 	                m(
 	                    "h3",
-	                    { "class": "main__title__description main__title--text-shadow--size-3" },
+	                    { "class": "home__title__description home__title--text-shadow--size-3" },
 	                    "TECHNICAL DIRECTOR"
 	                ),
 	                m(
@@ -1737,12 +1722,6 @@
 	                )
 	            )
 	        );
-	    },
-	    openNav: function openNav() {
-	        var main = document.getElementById("main");
-	        main.style.transform = "translate(-300px,0)";
-
-	        Nav.open();
 	    }
 	};
 
@@ -1754,22 +1733,276 @@
 
 	"use strict";
 
+	var m = __webpack_require__(1);
+	var Nav = __webpack_require__(8);
+	var App = __webpack_require__(9);
+
+	var Layout = {
+	    oninit: function oninit() {
+	        var self = this;
+
+	        window.addEventListener('state', function (e) {
+	            self.moveForNav(App.navState());
+	        }, false);
+	    },
+
+	    oncreate: function oncreate() {
+	        this.content_container = document.getElementById("content-container");
+	    },
+
+	    view: function view(vnode) {
+	        return m(
+	            "main",
+	            { "class": "layout" },
+	            m(
+	                "a",
+	                { href: "#", onclick: this.onMenuButtonClick, "class": "menu" },
+	                m(
+	                    "svg",
+	                    { xmlns: "http://www.w3.org/2000/svg", width: "30", height: "23", viewBox: "0 0 95.2 74.6" },
+	                    m("path", { d: "M5.3 74.6C2.4 74.6 0 72.3 0 69.4c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", style: "fill-opacity:0.07;stroke-width:0.08" }),
+	                    m("path", { d: "M5.3 12C2.4 12 0 9.7 0 6.8c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", style: "fill-opacity:0.07;stroke-width:0.08" }),
+	                    m("path", { d: "M5.3 43.3C2.4 43.3 0 41 0 38.1c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", style: "fill-opacity:0.07;stroke-width:0.08" }),
+	                    m("path", { "class": "menu__hamburger-line", d: "M5.3 73C2.4 73 0 70.7 0 67.8c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", "stroke-width": "0.08" }),
+	                    m("path", { "class": "menu__hamburger-line", d: "M5.3 10.4C2.4 10.4 0 8.1 0 5.2c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", "stroke-width": "0.08" }),
+	                    m("path", { "class": "menu__hamburger-line", d: "M5.3 41.7C2.4 41.7 0 39.4 0 36.5c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", "stroke-width": "0.08" })
+	                )
+	            ),
+	            vnode.children
+	        );
+	    },
+
+	    onMenuButtonClick: function onMenuButtonClick() {
+	        App.updateNav();
+	    },
+
+	    moveForNav: function moveForNav(navState) {
+	        navState ? this.content_container.style.transform = "translate(-300px,0)" : this.content_container.style.transform = "translate(0,0)";
+	    }
+	};
+
+	module.exports = Layout;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
 	// Nav
 	var m = __webpack_require__(1);
+	var App = __webpack_require__(9);
 
-	module.exports = {
+	var Nav = {
+	    oninit: function oninit() {
+	        var self = this;
+
+	        window.addEventListener('state', function (e) {
+	            self.open(App.navState());
+	        }, false);
+	    },
+
+	    oncreate: function oncreate() {
+	        this.el = document.getElementById("nav");
+	    },
+
 	    view: function view() {
 	        return m(
 	            "nav",
 	            { id: "nav", "class": "nav" },
-	            "NAV"
+	            m(
+	                "ul",
+	                null,
+	                m(
+	                    "li",
+	                    null,
+	                    m(
+	                        "a",
+	                        { href: "#" },
+	                        "HOME"
+	                    )
+	                ),
+	                m(
+	                    "li",
+	                    null,
+	                    m(
+	                        "a",
+	                        { href: "#" },
+	                        "PROJECTS"
+	                    )
+	                ),
+	                m(
+	                    "li",
+	                    null,
+	                    m(
+	                        "a",
+	                        { href: "#" },
+	                        "CONTACT"
+	                    )
+	                )
+	            )
 	        );
 	    },
-	    open: function open() {
-	        var el = document.getElementById("nav");
-	        el.style.right = "0px";
+
+	    open: function open(navState) {
+	        navState ? this.el.style.right = "0px" : this.el.style.right = "-300px";
 	    }
 	};
+
+	module.exports = Nav;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var m = __webpack_require__(1);
+	var stream = __webpack_require__(10);
+
+	var App = {
+	    navState: stream(false),
+
+	    updateNav: function updateNav() {
+	        this.navState(!this.navState());
+	        this.sendUpdate(new Event('state'));
+	    },
+
+	    sendUpdate: function sendUpdate(e) {
+	        window.dispatchEvent(e);
+	    }
+	};
+
+	module.exports = App;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(11)
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {"use strict"
+
+	var guid = 0, HALT = {}
+	function createStream() {
+		function stream() {
+			if (arguments.length > 0 && arguments[0] !== HALT) updateStream(stream, arguments[0])
+			return stream._state.value
+		}
+		initStream(stream)
+
+		if (arguments.length > 0 && arguments[0] !== HALT) updateStream(stream, arguments[0])
+
+		return stream
+	}
+	function initStream(stream) {
+		stream.constructor = createStream
+		stream._state = {id: guid++, value: undefined, state: 0, derive: undefined, recover: undefined, deps: {}, parents: [], endStream: undefined}
+		stream.map = stream["fantasy-land/map"] = map, stream["fantasy-land/ap"] = ap, stream["fantasy-land/of"] = createStream
+		stream.valueOf = valueOf, stream.toJSON = toJSON, stream.toString = valueOf
+
+		Object.defineProperties(stream, {
+			end: {get: function() {
+				if (!stream._state.endStream) {
+					var endStream = createStream()
+					endStream.map(function(value) {
+						if (value === true) unregisterStream(stream), unregisterStream(endStream)
+						return value
+					})
+					stream._state.endStream = endStream
+				}
+				return stream._state.endStream
+			}}
+		})
+	}
+	function updateStream(stream, value) {
+		updateState(stream, value)
+		for (var id in stream._state.deps) updateDependency(stream._state.deps[id], false)
+		finalize(stream)
+	}
+	function updateState(stream, value) {
+		stream._state.value = value
+		stream._state.changed = true
+		if (stream._state.state !== 2) stream._state.state = 1
+	}
+	function updateDependency(stream, mustSync) {
+		var state = stream._state, parents = state.parents
+		if (parents.length > 0 && parents.every(active) && (mustSync || parents.some(changed))) {
+			var value = stream._state.derive()
+			if (value === HALT) return false
+			updateState(stream, value)
+		}
+	}
+	function finalize(stream) {
+		stream._state.changed = false
+		for (var id in stream._state.deps) stream._state.deps[id]._state.changed = false
+	}
+
+	function combine(fn, streams) {
+		if (!streams.every(valid)) throw new Error("Ensure that each item passed to m.prop.combine/m.prop.merge is a stream")
+		return initDependency(createStream(), streams, function() {
+			return fn.apply(this, streams.concat([streams.filter(changed)]))
+		})
+	}
+
+	function initDependency(dep, streams, derive) {
+		var state = dep._state
+		state.derive = derive
+		state.parents = streams.filter(notEnded)
+
+		registerDependency(dep, state.parents)
+		updateDependency(dep, true)
+
+		return dep
+	}
+	function registerDependency(stream, parents) {
+		for (var i = 0; i < parents.length; i++) {
+			parents[i]._state.deps[stream._state.id] = stream
+			registerDependency(stream, parents[i]._state.parents)
+		}
+	}
+	function unregisterStream(stream) {
+		for (var i = 0; i < stream._state.parents.length; i++) {
+			var parent = stream._state.parents[i]
+			delete parent._state.deps[stream._state.id]
+		}
+		for (var id in stream._state.deps) {
+			var dependent = stream._state.deps[id]
+			var index = dependent._state.parents.indexOf(stream)
+			if (index > -1) dependent._state.parents.splice(index, 1)
+		}
+		stream._state.state = 2 //ended
+		stream._state.deps = {}
+	}
+
+	function map(fn) {return combine(function(stream) {return fn(stream())}, [this])}
+	function ap(stream) {return combine(function(s1, s2) {return s1()(s2())}, [stream, this])}
+	function valueOf() {return this._state.value}
+	function toJSON() {return this._state.value != null && typeof this._state.value.toJSON === "function" ? this._state.value.toJSON() : this._state.value}
+
+	function valid(stream) {return stream._state }
+	function active(stream) {return stream._state.state === 1}
+	function changed(stream) {return stream._state.changed}
+	function notEnded(stream) {return stream._state.state !== 2}
+
+	function merge(streams) {
+		return combine(function() {
+			return streams.map(function(s) {return s()})
+		}, streams)
+	}
+	createStream["fantasy-land/of"] = createStream
+	createStream.merge = merge
+	createStream.combine = combine
+	createStream.HALT = HALT
+
+	if (true) module["exports"] = createStream
+	else window.stream = createStream
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)(module)))
 
 /***/ }
 /******/ ]);
