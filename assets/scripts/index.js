@@ -49,11 +49,13 @@
 	// index.js
 	var m = __webpack_require__(1);
 	var Home = __webpack_require__(6);
+	var Nav = __webpack_require__(7);
 
-	m.route(document.body, "/home", {
-	    "/home": {
+	m.route(document.body, "/", {
+	    "/": {
 	        render: function render() {
-	            return m(Home);
+	            return [m(Home), m(Nav)];
+	            // return m(Home);
 	        }
 	    }
 	});
@@ -1689,16 +1691,17 @@
 
 	// Home
 	var m = __webpack_require__(1);
+	var Nav = __webpack_require__(7);
 
-	module.exports = {
-	    // oninit: User.loadList,
+	var HomeView = {
+	    // oninit: function () {}
 	    view: function view() {
 	        return m(
 	            "div",
-	            { "class": "main" },
+	            { id: "main", "class": "main" },
 	            m(
 	                "a",
-	                { href: "#", "class": "menu" },
+	                { href: "#", onclick: this.openNav, "class": "menu" },
 	                m(
 	                    "svg",
 	                    { xmlns: "http://www.w3.org/2000/svg", width: "30", height: "23", viewBox: "0 0 95.2 74.6" },
@@ -1734,6 +1737,37 @@
 	                )
 	            )
 	        );
+	    },
+	    openNav: function openNav() {
+	        var main = document.getElementById("main");
+	        main.style.transform = "translate(-300px,0)";
+
+	        Nav.open();
+	    }
+	};
+
+	module.exports = HomeView;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	// Nav
+	var m = __webpack_require__(1);
+
+	module.exports = {
+	    view: function view() {
+	        return m(
+	            "nav",
+	            { id: "nav", "class": "nav" },
+	            "NAV"
+	        );
+	    },
+	    open: function open() {
+	        var el = document.getElementById("nav");
+	        el.style.right = "0px";
 	    }
 	};
 
