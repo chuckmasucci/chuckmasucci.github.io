@@ -31,8 +31,7 @@ body {
         fill: #00a341; }
     body .layout .home {
       position: relative;
-      transition: all 0.3s;
-      height: 100vh; }
+      transition: all 0.3s; }
       body .layout .home .home__title {
         position: absolute;
         top: 50%;
