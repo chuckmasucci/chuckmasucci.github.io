@@ -1695,33 +1695,7 @@
 	var HomeView = {
 	    // oninit: function () {}
 	    view: function view() {
-	        return m(
-	            "section",
-	            { id: "content-container", "class": "home" },
-	            m(
-	                "div",
-	                { "class": "home__title" },
-	                m(
-	                    "h2",
-	                    { "class": "home__title__name home__title--text-shadow--size-8" },
-	                    "CHUCK MASUCCI"
-	                ),
-	                m(
-	                    "h3",
-	                    { "class": "home__title__description home__title--text-shadow--size-3" },
-	                    "TECHNICAL DIRECTOR"
-	                ),
-	                m(
-	                    "a",
-	                    { "class": "btn btn--green btn--box-shadow", href: "#" },
-	                    m(
-	                        "span",
-	                        { "class": "btn__copy" },
-	                        "VIEW"
-	                    )
-	                )
-	            )
-	        );
+	        return m("section", { id: "content-container", "class": "home" });
 	    }
 	};
 
