@@ -49,13 +49,19 @@
 	// index.js
 	var m = __webpack_require__(1);
 	var Home = __webpack_require__(6);
-	var Layout = __webpack_require__(7);
-	var Nav = __webpack_require__(8);
+	var Projects = __webpack_require__(10);
+	var Layout = __webpack_require__(11);
+	var Nav = __webpack_require__(12);
 
 	m.route(document.body, "/", {
 	    "/": {
 	        render: function render() {
 	            return m(Layout, [m(Home), m(Nav)]);
+	        }
+	    },
+	    "/projects": {
+	        render: function render() {
+	            return m(Layout, [m(Projects), m(Nav)]);
 	        }
 	    }
 	});
@@ -1691,11 +1697,41 @@
 
 	// Home
 	var m = __webpack_require__(1);
+	var App = __webpack_require__(7);
 
 	var HomeView = {
-	    // oninit: function () {}
+	    onbeforeremove: function onbeforeremove() {
+	        App.updateNav(false);
+	    },
+
 	    view: function view() {
-	        return m("section", { id: "content-container", "class": "home" });
+	        return m(
+	            "section",
+	            { id: "content-container", "class": "home" },
+	            m(
+	                "div",
+	                { "class": "home__title" },
+	                m(
+	                    "h2",
+	                    { "class": "home__title__name home__title--text-shadow--size-8" },
+	                    "CHUCK MASUCCI"
+	                ),
+	                m(
+	                    "h3",
+	                    { "class": "home__title__description home__title--text-shadow--size-3" },
+	                    "TECHNICAL DIRECTOR"
+	                ),
+	                m(
+	                    "a",
+	                    { "class": "btn btn--green btn--box-shadow", href: "#!/projects" },
+	                    m(
+	                        "span",
+	                        { "class": "btn__copy" },
+	                        "VIEW"
+	                    )
+	                )
+	            )
+	        );
 	    }
 	};
 
@@ -1705,140 +1741,21 @@
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-
-	var m = __webpack_require__(1);
-	var Nav = __webpack_require__(8);
-	var App = __webpack_require__(9);
-
-	var Layout = {
-	    oninit: function oninit() {
-	        var self = this;
-
-	        window.addEventListener('state', function (e) {
-	            self.moveForNav(App.navState());
-	        }, false);
-	    },
-
-	    oncreate: function oncreate() {
-	        this.content_container = document.getElementById("content-container");
-	    },
-
-	    view: function view(vnode) {
-	        return m(
-	            "main",
-	            { "class": "layout" },
-	            m(
-	                "a",
-	                { href: "#", onclick: this.onMenuButtonClick, "class": "menu" },
-	                m(
-	                    "svg",
-	                    { xmlns: "http://www.w3.org/2000/svg", width: "30", height: "23", viewBox: "0 0 95.2 74.6" },
-	                    m("path", { d: "M5.3 74.6C2.4 74.6 0 72.3 0 69.4c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", style: "fill-opacity:0.07;stroke-width:0.08" }),
-	                    m("path", { d: "M5.3 12C2.4 12 0 9.7 0 6.8c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", style: "fill-opacity:0.07;stroke-width:0.08" }),
-	                    m("path", { d: "M5.3 43.3C2.4 43.3 0 41 0 38.1c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", style: "fill-opacity:0.07;stroke-width:0.08" }),
-	                    m("path", { "class": "menu__hamburger-line", d: "M5.3 73C2.4 73 0 70.7 0 67.8c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", "stroke-width": "0.08" }),
-	                    m("path", { "class": "menu__hamburger-line", d: "M5.3 10.4C2.4 10.4 0 8.1 0 5.2c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", "stroke-width": "0.08" }),
-	                    m("path", { "class": "menu__hamburger-line", d: "M5.3 41.7C2.4 41.7 0 39.4 0 36.5c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", "stroke-width": "0.08" })
-	                )
-	            ),
-	            vnode.children
-	        );
-	    },
-
-	    onMenuButtonClick: function onMenuButtonClick() {
-	        App.updateNav();
-	    },
-
-	    moveForNav: function moveForNav(navState) {
-	        navState ? this.content_container.style.transform = "translate(-300px,0)" : this.content_container.style.transform = "translate(0,0)";
-	    }
-	};
-
-	module.exports = Layout;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	// Nav
-	var m = __webpack_require__(1);
-	var App = __webpack_require__(9);
-
-	var Nav = {
-	    oninit: function oninit() {
-	        var self = this;
-
-	        window.addEventListener('state', function (e) {
-	            self.open(App.navState());
-	        }, false);
-	    },
-
-	    oncreate: function oncreate() {
-	        this.el = document.getElementById("nav");
-	    },
-
-	    view: function view() {
-	        return m(
-	            "nav",
-	            { id: "nav", "class": "nav" },
-	            m(
-	                "ul",
-	                null,
-	                m(
-	                    "li",
-	                    null,
-	                    m(
-	                        "a",
-	                        { href: "#" },
-	                        "HOME"
-	                    )
-	                ),
-	                m(
-	                    "li",
-	                    null,
-	                    m(
-	                        "a",
-	                        { href: "#" },
-	                        "PROJECTS"
-	                    )
-	                ),
-	                m(
-	                    "li",
-	                    null,
-	                    m(
-	                        "a",
-	                        { href: "#" },
-	                        "CONTACT"
-	                    )
-	                )
-	            )
-	        );
-	    },
-
-	    open: function open(navState) {
-	        navState ? this.el.style.right = "0px" : this.el.style.right = "-300px";
-	    }
-	};
-
-	module.exports = Nav;
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
 	var m = __webpack_require__(1);
-	var stream = __webpack_require__(10);
+	var stream = __webpack_require__(8);
 
 	var App = {
 	    navState: stream(false),
 
-	    updateNav: function updateNav() {
+	    toggleNav: function toggleNav() {
 	        this.navState(!this.navState());
+	        this.sendUpdate(new Event('state'));
+	    },
+
+	    updateNav: function updateNav(state) {
+	        this.navState(state);
 	        this.sendUpdate(new Event('state'));
 	    },
 
@@ -1850,13 +1767,13 @@
 	module.exports = App;
 
 /***/ },
-/* 10 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(11)
+	module.exports = __webpack_require__(9)
 
 /***/ },
-/* 11 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {"use strict"
@@ -1977,6 +1894,167 @@
 	else window.stream = createStream
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)(module)))
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	// Home
+	var m = __webpack_require__(1);
+	var App = __webpack_require__(7);
+
+	var ProjectsView = {
+	    onbeforeremove: function onbeforeremove() {
+	        App.updateNav(false);
+	    },
+
+	    view: function view() {
+	        return m(
+	            "section",
+	            { id: "content-container", "class": "home" },
+	            m(
+	                "div",
+	                { "class": "home__title" },
+	                m(
+	                    "h2",
+	                    { "class": "home__title__name home__title--text-shadow--size-8" },
+	                    "PROJECTS"
+	                )
+	            )
+	        );
+	    }
+	};
+
+	module.exports = ProjectsView;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var m = __webpack_require__(1);
+	var Nav = __webpack_require__(12);
+	var App = __webpack_require__(7);
+
+	var Layout = {
+	    oninit: function oninit() {
+	        var self = this;
+
+	        window.addEventListener('state', function (e) {
+	            self.moveForNav(App.navState());
+	        }, false);
+	    },
+
+	    oncreate: function oncreate() {
+	        this.content_container = document.getElementById("content-container");
+	    },
+
+	    view: function view(vnode) {
+	        self = this;
+	        return m(
+	            "main",
+	            { "class": "layout" },
+	            m(
+	                "a",
+	                { href: "#", onclick: function onclick(e) {
+	                        self.onMenuButtonClick();e.preventDefault();
+	                    }, "class": "menu" },
+	                m(
+	                    "svg",
+	                    { xmlns: "http://www.w3.org/2000/svg", width: "30", height: "23", viewBox: "0 0 95.2 74.6" },
+	                    m("path", { d: "M5.3 74.6C2.4 74.6 0 72.3 0 69.4c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", style: "fill-opacity:0.07;stroke-width:0.08" }),
+	                    m("path", { d: "M5.3 12C2.4 12 0 9.7 0 6.8c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", style: "fill-opacity:0.07;stroke-width:0.08" }),
+	                    m("path", { d: "M5.3 43.3C2.4 43.3 0 41 0 38.1c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", style: "fill-opacity:0.07;stroke-width:0.08" }),
+	                    m("path", { "class": "menu__hamburger-line", d: "M5.3 73C2.4 73 0 70.7 0 67.8c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", "stroke-width": "0.08" }),
+	                    m("path", { "class": "menu__hamburger-line", d: "M5.3 10.4C2.4 10.4 0 8.1 0 5.2c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", "stroke-width": "0.08" }),
+	                    m("path", { "class": "menu__hamburger-line", d: "M5.3 41.7C2.4 41.7 0 39.4 0 36.5c0-2.9 2.4-5.2 5.3-5.2 0.1 0 0.1 0 0.2 0v0H89.9v0c0 0 0 0 0.1 0 2.9 0 5.3 2.3 5.3 5.2 0 2.9-2.4 5.2-5.3 5.2 0 0 0 0-0.1 0v0H5.4v0c-0.1 0-0.1 0-0.2 0z", "stroke-width": "0.08" })
+	                )
+	            ),
+	            vnode.children
+	        );
+	    },
+
+	    onMenuButtonClick: function onMenuButtonClick() {
+	        App.toggleNav();
+	    },
+
+	    moveForNav: function moveForNav(navState) {
+	        navState ? this.content_container.style.transform = "translate(-300px,0)" : this.content_container.style.transform = "translate(0,0)";
+	    }
+	};
+
+	module.exports = Layout;
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	// Nav
+	var m = __webpack_require__(1);
+	var App = __webpack_require__(7);
+
+	var Nav = {
+	    oninit: function oninit() {
+	        var self = this;
+
+	        window.addEventListener('state', function (e) {
+	            self.open(App.navState());
+	        }, false);
+	    },
+
+	    oncreate: function oncreate() {
+	        this.el = document.getElementById("nav");
+	    },
+
+	    view: function view() {
+	        return m(
+	            "nav",
+	            { id: "nav", "class": "nav" },
+	            m(
+	                "ul",
+	                null,
+	                m(
+	                    "li",
+	                    null,
+	                    m(
+	                        "a",
+	                        { href: "#!/" },
+	                        "HOME"
+	                    )
+	                ),
+	                m(
+	                    "li",
+	                    null,
+	                    m(
+	                        "a",
+	                        { href: "#!/projects" },
+	                        "PROJECTS"
+	                    )
+	                ),
+	                m(
+	                    "li",
+	                    null,
+	                    m(
+	                        "a",
+	                        { href: "#!/contact" },
+	                        "CONTACT"
+	                    )
+	                )
+	            )
+	        );
+	    },
+
+	    open: function open(navState) {
+	        navState ? this.el.style.right = "0px" : this.el.style.right = "-300px";
+	    }
+	};
+
+	module.exports = Nav;
 
 /***/ }
 /******/ ]);
