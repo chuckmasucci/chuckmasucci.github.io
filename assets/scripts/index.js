@@ -44,29 +44,70 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	// index.js
-	var m = __webpack_require__(1);
-	var Home = __webpack_require__(6);
-	var Client = __webpack_require__(11);
-	var Layout = __webpack_require__(12);
-	var Nav = __webpack_require__(13);
-	var ClientChildView = __webpack_require__(14);
+	var _mithril = __webpack_require__(1);
 
-	// Site routes: /, /client/"clientslug"
-	m.route(document.body, "/", {
-	    "/": {
+	var _mithril2 = _interopRequireDefault(_mithril);
+
+	var _Layout = __webpack_require__(6);
+
+	var _Layout2 = _interopRequireDefault(_Layout);
+
+	var _Nav = __webpack_require__(8);
+
+	var _Nav2 = _interopRequireDefault(_Nav);
+
+	var _Home = __webpack_require__(11);
+
+	var _Home2 = _interopRequireDefault(_Home);
+
+	var _Client = __webpack_require__(12);
+
+	var _Client2 = _interopRequireDefault(_Client);
+
+	var _ClientChildView = __webpack_require__(17);
+
+	var _ClientChildView2 = _interopRequireDefault(_ClientChildView);
+
+	var _ClientButton = __webpack_require__(13);
+
+	var _ClientButton2 = _interopRequireDefault(_ClientButton);
+
+	var _Contact = __webpack_require__(18);
+
+	var _Contact2 = _interopRequireDefault(_Contact);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// m.route.prefix("#!")
+
+	_mithril2.default.route(document.body, '/', {
+	    '/': {
 	        render: function render(vnode) {
-	            return m(Layout, vnode.attrs, [m(Home), m(Nav)]);
+	            return [(0, _mithril2.default)(_Layout2.default, vnode.attrs, (0, _mithril2.default)(_Home2.default, vnode.attrs)), (0, _mithril2.default)(_Nav2.default, vnode.attrs)];
 	        }
 	    },
-	    "/client/:id": {
+	    '/client/:id': {
 	        render: function render(vnode) {
-	            return m(Layout, vnode.attrs, [m(Client, vnode.attrs, [m(ClientChildView, { initial: false })]), m(Nav)]);
+	            return [(0, _mithril2.default)(_Layout2.default, vnode.attrs, [(0, _mithril2.default)(_Client2.default, vnode.attrs, (0, _mithril2.default)(_ClientChildView2.default, vnode.attrs))]), (0, _mithril2.default)(_Nav2.default, vnode.attrs)];
+	        }
+	    },
+	    '/contact': {
+	        render: function render(vnode) {
+	            return [(0, _mithril2.default)(_Layout2.default, vnode.attrs, (0, _mithril2.default)(_Contact2.default, vnode.attrs)), (0, _mithril2.default)(_Nav2.default, vnode.attrs)];
 	        }
 	    }
 	});
+
+	window.addEventListener("scroll", function (event) {
+	    console.log('scroll');
+	    var top = this.scrollY,
+	        left = this.scrollX;
+
+	    console.log("Scroll X: " + left + "px");
+	    console.log(verticalScroll.innerHTML = "Scroll Y: " + top + "px");
+	}, false);
 
 /***/ },
 /* 1 */
@@ -1695,72 +1736,77 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	// Home
-	var m = __webpack_require__(1);
-	var App = __webpack_require__(7);
-	var ClientModel = __webpack_require__(10);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var HomeView = {
-	    oncreate: function oncreate(vnode) {
-	        // Wait for transition in animation to complere (.5s) and remove the class
-	        setTimeout(function () {
-	            vnode.dom.classList.remove("content-container--transition-in");
-	        }, 500);
-	    },
+	var _mithril = __webpack_require__(1);
 
-	    onbeforeremove: function onbeforeremove() {
-	        // Inform the App model the page is being removed - this informs the nav to close
-	        App.sendUpdate(new Event("pageState"));
+	var _mithril2 = _interopRequireDefault(_mithril);
 
-	        // Declare the container element that will animate before being removed
-	        var transitionContainer = document.getElementById("content-container__home");
-	        transitionContainer.classList.add("content-container--transition-out");
+	var _ClientModel = __webpack_require__(7);
 
-	        // This hold's the mithril lifecycle until the transition animation completes
-	        // On complete the onremove method is called and this view is destroyed
-	        return new Promise(function (resolve) {
-	            setTimeout(resolve, 500);
-	        });
-	    },
+	var _ClientModel2 = _interopRequireDefault(_ClientModel);
 
-	    view: function view() {
-	        return m(
-	            "section",
-	            { id: "content-container", "class": "home content-container content-container--transition-in" },
-	            m(
-	                "div",
-	                { id: "content-container__home", "class": "content-container__home" },
-	                m(
-	                    "div",
-	                    { "class": "content-container__home__title" },
-	                    m(
-	                        "h2",
-	                        { "class": "content-container__home__title__name content-container__home__title--text-shadow--size-8" },
-	                        "CHUCK MASUCCI"
-	                    ),
-	                    m(
-	                        "h3",
-	                        { "class": "content-container__home__title__description content-container__home__title--text-shadow--size-3" },
-	                        "TECHNICAL DIRECTOR"
-	                    ),
-	                    Object.keys(ClientModel.currentClient).length > 0 && m(
-	                        "a",
-	                        { "class": "btn btn--green btn--box-shadow", href: "/client/" + ClientModel.currentClient.slug, oncreate: m.route.link },
-	                        m(
-	                            "span",
-	                            { "class": "btn__copy" },
-	                            "VIEW"
-	                        )
-	                    )
-	                )
-	            )
-	        );
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Layout = function () {
+	    function Layout() {
+	        _classCallCheck(this, Layout);
 	    }
-	};
 
-	module.exports = HomeView;
+	    _createClass(Layout, null, [{
+	        key: 'oninit',
+	        value: function oninit(vnode) {
+	            var _this = this;
+
+	            // Load client data
+	            _ClientModel2.default.loadList(vnode.attrs.id);
+
+	            window.addEventListener("navopen", function () {
+	                _this.onnavopen(vnode);
+	            });
+
+	            window.addEventListener("navclose", function () {
+	                _this.onnavclose(vnode);
+	            });
+	        }
+	    }, {
+	        key: 'onnavopen',
+	        value: function onnavopen(vnode) {
+	            vnode.dom.classList.add('layout--nav-open');
+	            vnode.dom.classList.remove('layout--nav-closed');
+	        }
+	    }, {
+	        key: 'onnavclose',
+	        value: function onnavclose(vnode) {
+	            vnode.dom.classList.add('layout--nav-closed');
+	            vnode.dom.classList.remove('layout--nav-open');
+	        }
+	    }, {
+	        key: 'onupdate',
+	        value: function onupdate(vnode) {
+	            setTimeout(function () {
+	                vnode.dom.scrollTop = 0;
+	            }, 500);
+	        }
+	    }, {
+	        key: 'view',
+	        value: function view(vnode) {
+	            return (0, _mithril2.default)(
+	                'main',
+	                { id: 'Layout', 'class': 'layout' },
+	                vnode.children
+	            );
+	        }
+	    }]);
+
+	    return Layout;
+	}();
+
+	module.exports = Layout;
 
 /***/ },
 /* 7 */
@@ -1768,50 +1814,581 @@
 
 	'use strict';
 
-	// App model for holding app state data and event dispatching
-	// TODO needs some work
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var m = __webpack_require__(1);
-	var stream = __webpack_require__(8);
+	var _mithril = __webpack_require__(1);
 
-	var App = {
-	    // State of the navigation (currently not implemented)
-	    navState: stream(false),
+	var _mithril2 = _interopRequireDefault(_mithril);
 
-	    // Toggles nav state and dispatches event for other classes to react upon
-	    toggleNav: function toggleNav() {
-	        this.navState(!this.navState());
-	        this.sendUpdate(new Event('navState'));
-	    },
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	    // Changes nav state based on @param state
-	    updateNav: function updateNav(state) {
-	        this.navState(state);
-	        this.sendUpdate(new Event('navState'));
-	    },
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	    // Dispatch event helper
-	    sendUpdate: function sendUpdate(e) {
-	        window.dispatchEvent(e);
-	    },
-
-	    // Holds the main content container for each different view (used for transition animations)
-	    // TODO not sure if this is the best place for this
-	    setContentContainer: function setContentContainer(elem) {
-	        this.contentContainer = elem;
+	var ClientsModel = function () {
+	    function ClientsModel() {
+	        _classCallCheck(this, ClientsModel);
 	    }
-	};
 
-	module.exports = App;
+	    _createClass(ClientsModel, null, [{
+	        key: 'loadList',
+
+	        // Load client data JSON file
+	        value: function loadList(id) {
+	            this.list = [];
+	            this.currentClient = [];
+	            this.nextClient = [];
+	            this.prevClient = [];
+	            this.currentIndex = 0;
+	            this.prevIndex = 0;
+	            this.nextIndex = 0;
+	            this.id = '';
+
+	            return _mithril2.default.request({
+	                method: "GET",
+	                url: "/assets/data/projects.json"
+	            }).then(function (result) {
+	                ClientsModel.list = result;
+	                if (id === undefined) {
+	                    ClientsModel.setClientByIndex(0);
+	                } else {
+	                    ClientsModel.setCurrentClientId(id);
+	                    ClientsModel.setClientData();
+	                }
+	            });
+	        }
+
+	        // Defines the client slug
+
+	    }, {
+	        key: 'setCurrentClientId',
+	        value: function setCurrentClientId(id) {
+	            this.id = id;
+	        }
+
+	        // Defines previous, current, and next client data into separate objects based on global id
+
+	    }, {
+	        key: 'setClientData',
+	        value: function setClientData() {
+	            var clientData = this.getClientById(this.id);
+	            this.currentIndex = clientData.index;
+	            this.currentClient = clientData.client;
+	            this.setPrevClient();
+	            this.setNextClient();
+	        }
+
+	        // Defines previous, current, and next client data into separate objects based on @param index
+
+	    }, {
+	        key: 'setClientByIndex',
+	        value: function setClientByIndex(index) {
+	            this.currentIndex = index;
+	            this.currentClient = this.list[0];
+	            this.setPrevClient();
+	            this.setNextClient();
+	        }
+	    }, {
+	        key: 'setNextClient',
+	        value: function setNextClient() {
+	            this.nextIndex = this.currentIndex == this.list.length - 1 ? 0 : this.currentIndex + 1;
+	            this.nextClient = this.list[this.nextIndex];
+	        }
+	    }, {
+	        key: 'setPrevClient',
+	        value: function setPrevClient() {
+	            this.prevIndex = this.currentIndex === 0 ? this.list.length - 1 : this.currentIndex - 1;
+	            this.prevClient = this.list[this.prevIndex];
+	        }
+
+	        // Returns current client based on client slug @param id
+
+	    }, {
+	        key: 'getClientById',
+	        value: function getClientById(id) {
+	            var index = 0;
+	            for (var i in ClientsModel.list) {
+	                var client = ClientsModel.list[i];
+	                if (client.slug == id) return { client: client, index: index };
+
+	                index++;
+	            }
+	        }
+	    }]);
+
+	    return ClientsModel;
+	}();
+
+	module.exports = ClientsModel;
 
 /***/ },
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(9)
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _mithril = __webpack_require__(1);
+
+	var _mithril2 = _interopRequireDefault(_mithril);
+
+	var _App = __webpack_require__(9);
+
+	var _App2 = _interopRequireDefault(_App);
+
+	var _ClientModel = __webpack_require__(7);
+
+	var _ClientModel2 = _interopRequireDefault(_ClientModel);
+
+	var _NavItem = __webpack_require__(10);
+
+	var _NavItem2 = _interopRequireDefault(_NavItem);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Nav = function () {
+	    function Nav() {
+	        _classCallCheck(this, Nav);
+	    }
+
+	    _createClass(Nav, null, [{
+	        key: 'oninit',
+	        value: function oninit(vnode) {
+	            vnode.state.nav = false;
+	        }
+	    }, {
+	        key: 'onupdate',
+	        value: function onupdate(vnode) {
+	            // Open or close nav
+	            if (vnode.state.nav) this.navToggle(vnode);
+	        }
+	    }, {
+	        key: 'view',
+	        value: function view(vnode) {
+	            var _this = this;
+
+	            return (0, _mithril2.default)(
+	                'nav',
+	                { id: 'nav', 'class': 'nav layout__nav' },
+	                (0, _mithril2.default)(
+	                    'button',
+	                    { 'class': 'menu', onclick: function onclick(e) {
+	                            e.redraw = false;_this.navToggle(vnode);
+	                        } },
+	                    (0, _mithril2.default)('i', { 'class': 'fa fa-chevron-circle-down' })
+	                ),
+	                (0, _mithril2.default)(
+	                    'ul',
+	                    { 'class': 'nav__list-main' },
+	                    (0, _mithril2.default)(_NavItem2.default, { type: 'link', route: '/', icon: 'fa-home', title: 'Home' }),
+	                    (0, _mithril2.default)(_NavItem2.default, { type: 'spacer', 'spacer-type': 'bullet' }),
+	                    (0, _mithril2.default)(_NavItem2.default, { type: 'link', route: '/client/' + _ClientModel2.default.currentClient.slug, icon: 'fa-home', title: 'Projects' }),
+	                    (0, _mithril2.default)(_NavItem2.default, { type: 'spacer', 'spacer-type': 'bullet' }),
+	                    (0, _mithril2.default)(_NavItem2.default, { type: 'link', route: '/contact/', icon: 'fa-address-card', title: 'Contact' })
+	                )
+	            );
+	        }
+	    }, {
+	        key: 'navToggle',
+	        value: function navToggle(vnode) {
+	            if (!vnode.state.nav) {
+	                vnode.dom.classList.add('nav--open');
+	                vnode.state.nav = true;
+	                _App2.default.sendUpdate(new Event('navopen'));
+	            } else {
+	                vnode.dom.classList.remove('nav--open');
+	                vnode.state.nav = false;
+	                _App2.default.sendUpdate(new Event('navclose'));
+	            }
+	        }
+	    }]);
+
+	    return Nav;
+	}();
+
+	module.exports = Nav;
 
 /***/ },
 /* 9 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var App = function () {
+	    function App() {
+	        _classCallCheck(this, App);
+	    }
+
+	    _createClass(App, null, [{
+	        key: "sendUpdate",
+
+	        // Dispatch event helper
+	        value: function sendUpdate(e) {
+	            window.dispatchEvent(e);
+	        }
+	    }]);
+
+	    return App;
+	}();
+
+	module.exports = App;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _mithril = __webpack_require__(1);
+
+	var _mithril2 = _interopRequireDefault(_mithril);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var NavItem = {
+	    onupdate: function onupdate(vnode) {
+	        if (vnode.attrs.type == 'link') {
+	            // Add link class
+	            vnode.dom.classList.add('nav__list-main__list-item');
+
+	            // Set active and inactive classes
+	            if (_mithril2.default.route.get() == vnode.attrs.route) vnode.dom.classList.add('nav__list-main__list-item-active');else vnode.dom.classList.remove('nav__list-main__list-item-active');
+	        } else if (vnode.attrs.type == 'spacer') {
+	            // Add spacer class
+	            vnode.dom.classList.add('nav__list-main__bullet');
+	        }
+	    },
+	    view: function view(_ref) {
+	        var attrs = _ref.attrs;
+
+	        return (0, _mithril2.default)(
+	            'li',
+	            null,
+	            attrs.type == 'link' && (0, _mithril2.default)(
+	                'a',
+	                { href: attrs.route, oncreate: _mithril2.default.route.link },
+	                (0, _mithril2.default)('i', { 'class': "fa " + attrs.icon + " fa-5x", 'aria-hidden': 'true' }),
+	                attrs.title
+	            ),
+	            attrs.type == 'spacer' && (0, _mithril2.default)(
+	                'span',
+	                null,
+	                '\u2022'
+	            )
+	        );
+	    }
+	};
+
+	module.exports = NavItem;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _mithril = __webpack_require__(1);
+
+	var _mithril2 = _interopRequireDefault(_mithril);
+
+	var _App = __webpack_require__(9);
+
+	var _App2 = _interopRequireDefault(_App);
+
+	var _ClientModel = __webpack_require__(7);
+
+	var _ClientModel2 = _interopRequireDefault(_ClientModel);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var HomeView = function () {
+	    function HomeView() {
+	        _classCallCheck(this, HomeView);
+	    }
+
+	    _createClass(HomeView, null, [{
+	        key: 'oncreate',
+	        value: function oncreate(vnode) {
+	            // Wait for transition in animation to complere (.5s) and remove the class
+	            setTimeout(function () {
+	                vnode.dom.classList.remove("content-container--transition-in--next");
+	            }, 500);
+	        }
+	    }, {
+	        key: 'onbeforeremove',
+	        value: function onbeforeremove(vnode) {
+	            // Add transition out class to dom container
+	            vnode.dom.classList.add("content-container--transition-out--next");
+
+	            // This hold's the mithril lifecycle until the transition animation complextes
+	            // On complete the onremove method is called and this view is destroyed
+	            return new Promise(function (resolve) {
+	                setTimeout(resolve, 500);
+	            });
+	        }
+	    }, {
+	        key: 'view',
+	        value: function view(vnode) {
+	            return (0, _mithril2.default)(
+	                'section',
+	                { id: 'content-container', 'class': 'home content-container content-container--transition-in--next' },
+	                (0, _mithril2.default)(
+	                    'div',
+	                    { id: 'content-container__home', 'class': 'content-container__home' },
+	                    (0, _mithril2.default)(
+	                        'div',
+	                        { 'class': 'content-container__home__title' },
+	                        (0, _mithril2.default)(
+	                            'h2',
+	                            { 'class': 'content-container__home__title__name content-container__home__title--text-shadow--size-8' },
+	                            'CHUCK MASUCCI'
+	                        ),
+	                        (0, _mithril2.default)(
+	                            'h3',
+	                            { 'class': 'content-container__home__title__description content-container__home__title--text-shadow--size-3' },
+	                            'TECHNICAL DIRECTOR / DEVELOPER'
+	                        ),
+	                        Object.keys(_ClientModel2.default.currentClient).length > 0 && (0, _mithril2.default)(
+	                            'a',
+	                            { 'class': 'btn btn--green btn--box-shadow', href: "/client/" + _ClientModel2.default.currentClient.slug, oncreate: _mithril2.default.route.link },
+	                            (0, _mithril2.default)(
+	                                'span',
+	                                { 'class': 'btn__copy' },
+	                                'VIEW WORK'
+	                            )
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return HomeView;
+	}();
+
+	module.exports = HomeView;
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _mithril = __webpack_require__(1);
+
+	var _mithril2 = _interopRequireDefault(_mithril);
+
+	var _App = __webpack_require__(9);
+
+	var _App2 = _interopRequireDefault(_App);
+
+	var _ClientModel = __webpack_require__(7);
+
+	var _ClientModel2 = _interopRequireDefault(_ClientModel);
+
+	var _ClientButton = __webpack_require__(13);
+
+	var _ClientButton2 = _interopRequireDefault(_ClientButton);
+
+	var _SwipeOverlay = __webpack_require__(14);
+
+	var _SwipeOverlay2 = _interopRequireDefault(_SwipeOverlay);
+
+	var _stream = __webpack_require__(15);
+
+	var _stream2 = _interopRequireDefault(_stream);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var ClientView = function () {
+	    function ClientView() {
+	        _classCallCheck(this, ClientView);
+	    }
+
+	    _createClass(ClientView, null, [{
+	        key: 'oninit',
+	        value: function oninit(vnode) {
+	            // Inform the client model of the current project based on the url slug
+	            _ClientModel2.default.setCurrentClientId(vnode.attrs.id);
+
+	            this.direction = (0, _stream2.default)('next');
+	        }
+	    }, {
+	        key: 'onbeforeupdate',
+	        value: function onbeforeupdate(vnode) {
+	            // When url updates we update the client model with the current project based on the url slug
+	            _ClientModel2.default.setCurrentClientId(vnode.attrs.id);
+
+	            // Update the client with new data based on the new project
+	            _ClientModel2.default.setClientData();
+
+	            // Sets the direction in attrs object so ClientChildView recieves the direction
+	            vnode.attrs.navDirection = this.direction();
+	        }
+	    }, {
+	        key: 'onupdate',
+	        value: function onupdate(vnode) {
+	            var _this = this;
+
+	            // Initialize Hammer for touch events
+	            this.clientTouch = new Hammer(vnode.dom);
+	            this.clientTouch.on("swipe", function (ev) {
+	                if (ev.direction == Hammer.DIRECTION_LEFT) {
+	                    _this.direction('next');
+	                    _this.changeClient('next');
+	                } else if (ev.direction == Hammer.DIRECTION_RIGHT) {
+	                    _this.direction('prev');
+	                    _this.changeClient('prev');
+	                }
+	            });
+	        }
+	    }, {
+	        key: 'onbeforeremove',
+	        value: function onbeforeremove(vnode) {
+	            // Inform the App model the view is about to be removed and transition out
+	            vnode.dom.classList.add("content-container--transition-out--next");
+
+	            return new Promise(function (resolve) {
+	                setTimeout(resolve, 500);
+	            });
+	        }
+	    }, {
+	        key: 'view',
+	        value: function view(vnode) {
+	            return (0, _mithril2.default)(
+	                'section',
+	                { id: 'content-container', 'class': 'content-container client-container' },
+	                (0, _mithril2.default)(_SwipeOverlay2.default, { copy: 'SWIPE TO NAVIGATE' }),
+	                (0, _mithril2.default)(_ClientButton2.default, { direction: 'prev', setdirection: this.direction, changeClient: this.changeClient }),
+	                (0, _mithril2.default)(_ClientButton2.default, { direction: 'next', setdirection: this.direction, changeClient: this.changeClient }),
+	                vnode.children
+	            );
+	        }
+	    }, {
+	        key: 'changeClient',
+	        value: function changeClient(direction) {
+	            if (direction == 'prev') _mithril2.default.route.set('/client/' + _ClientModel2.default.prevClient.slug);else if (direction == 'next') _mithril2.default.route.set('/client/' + _ClientModel2.default.nextClient.slug);
+
+	            return false;
+	        }
+	    }]);
+
+	    return ClientView;
+	}();
+
+	module.exports = ClientView;
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _mithril = __webpack_require__(1);
+
+	var _mithril2 = _interopRequireDefault(_mithril);
+
+	var _ClientModel = __webpack_require__(7);
+
+	var _ClientModel2 = _interopRequireDefault(_ClientModel);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ClientButtonView = {
+	    oncreate: function oncreate(vnode) {
+	        setTimeout(function () {
+	            vnode.dom.classList.add('client-container__toggle--transition-in');
+	        }, 500);
+	    },
+	    view: function view(vnode) {
+	        var _this = this;
+
+	        return (0, _mithril2.default)(
+	            'a',
+	            { onclick: function onclick(e) {
+	                    return _this.changeClient(e, vnode.attrs.changeClient, vnode.attrs.setdirection, vnode.attrs.direction);
+	                }, href: vnode.attrs.direction == 'prev' && "/client/" + _ClientModel2.default.prevClient.slug || vnode.attrs.direction == 'next' && '/client/' + _ClientModel2.default.nextClient.slug, oncreate: _mithril2.default.route.link, 'class': "client-container__toggle client-container__toggle-shadow--size-8 client-container__" + vnode.attrs.direction },
+	            (0, _mithril2.default)(
+	                'div',
+	                { 'class': 'client-container__toggle__arrow' },
+	                (0, _mithril2.default)(
+	                    'svg',
+	                    { xmlns: 'http://www.w3.org/2000/svg', width: '21', height: '25', viewBox: '0 0 21 25' },
+	                    vnode.attrs.direction == 'prev' && (0, _mithril2.default)('path', { d: 'M13.8 25H21L7.2 12.5 21 0H13.8L0 12.5Z', 'stroke-width': '0.3' }),
+	                    vnode.attrs.direction == 'next' && (0, _mithril2.default)('path', { d: 'M7.2 0H0L13.8 12.5 0 25H7.2L21 12.5Z', 'stroke-width': '0.3' })
+	                )
+	            )
+	        );
+	    },
+	    changeClient: function changeClient(e, setdirection, _changeClient, direction) {
+	        // TODO Get back/prev browser buttons to work with prev direction
+	        // TODO Clicking fast issues
+
+	        e.redraw = false;
+	        e.preventDefault = true;
+
+	        setdirection(direction);
+	        _changeClient(direction);
+
+	        // Prevents href from firing
+	        return false;
+	    }
+	};
+
+	module.exports = ClientButtonView;
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _mithril = __webpack_require__(1);
+
+	var _mithril2 = _interopRequireDefault(_mithril);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SwipeOverlay = {
+	    view: function view(_ref) {
+	        var attrs = _ref.attrs;
+
+	        return (0, _mithril2.default)(
+	            "div",
+	            { "class": "client-container__overlay-swipe" },
+	            (0, _mithril2.default)(
+	                "span",
+	                null,
+	                attrs.copy
+	            )
+	        );
+	    }
+	};
+
+	module.exports = SwipeOverlay;
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(16)
+
+/***/ },
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {"use strict"
@@ -1934,386 +2511,329 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)(module)))
 
 /***/ },
-/* 10 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	var m = __webpack_require__(1);
-	var App = __webpack_require__(7);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var ClientsModel = {
-	    list: [],
-	    currentClient: [],
-	    nextClient: [],
-	    prevClient: [],
+	var _mithril = __webpack_require__(1);
 
-	    currentIndex: 0,
-	    prevIndex: 0,
-	    nextIndex: 0,
+	var _mithril2 = _interopRequireDefault(_mithril);
 
-	    id: '',
+	var _App = __webpack_require__(9);
 
-	    // Load client data JSON file
-	    loadList: function loadList(id) {
-	        return m.request({
-	            method: "GET",
-	            url: "/assets/data/projects.json"
-	        }).then(function (result) {
-	            ClientsModel.list = result;
+	var _App2 = _interopRequireDefault(_App);
 
-	            if (id === undefined) {
-	                ClientsModel.setClientByIndex(0);
-	            } else {
-	                ClientsModel.setCurrentClientId(id);
-	                ClientsModel.setClientData();
-	            }
-	        });
-	    },
+	var _ClientModel = __webpack_require__(7);
 
-	    // Defines the client slug
-	    setCurrentClientId: function setCurrentClientId(id) {
-	        this.id = id;
-	    },
+	var _ClientModel2 = _interopRequireDefault(_ClientModel);
 
-	    // Defines previous, current, and next client data into separate objects based on global id
-	    setClientData: function setClientData() {
-	        var clientData = this.getClientById(this.id);
-	        this.currentIndex = clientData.index;
-	        this.currentClient = clientData.client;
-	        this.setPrevClient();
-	        this.setNextClient();
-	    },
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	    // Defines previous, current, and next client data into separate objects based on @param index
-	    setClientByIndex: function setClientByIndex(index) {
-	        this.currentIndex = index;
-	        this.currentClient = this.list[0];
-	        this.setPrevClient();
-	        this.setNextClient();
-	    },
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	    setNextClient: function setNextClient() {
-	        this.nextIndex = this.currentIndex == this.list.length - 1 ? 0 : this.currentIndex + 1;
-	        this.nextClient = this.list[this.nextIndex];
-	    },
+	var ClientChildView = function () {
+	    function ClientChildView() {
+	        _classCallCheck(this, ClientChildView);
+	    }
 
-	    setPrevClient: function setPrevClient() {
-	        this.prevIndex = this.currentIndex == 0 ? this.list.length - 1 : this.currentIndex - 1;
-	        this.prevClient = this.list[this.prevIndex];
-	    },
-
-	    // Returns current client based on client slug @param id
-	    getClientById: function getClientById(id) {
-	        var index = 0;
-	        for (var i in ClientsModel.list) {
-	            var client = ClientsModel.list[i];
-	            if (client.slug == id) {
-	                return { client: client, index: index };
+	    _createClass(ClientChildView, null, [{
+	        key: 'oninit',
+	        value: function oninit() {
+	            // Set this to false until onupdate completes. This is used to allow or disallow onupdate from firing to accomodate transitions between clients
+	            this.clientSet = false;
+	        }
+	    }, {
+	        key: 'oncreate',
+	        value: function oncreate(vnode) {
+	            // Transition in
+	            if (vnode.attrs.navDirection == 'next') {
+	                vnode.dom.classList.remove('content-container--transition-out--next');
+	                vnode.dom.classList.add('content-container--transition-in--next');
 	            }
 
-	            index++;
+	            _mithril2.default.redraw();
 	        }
-	    }
+	    }, {
+	        key: 'onbeforeupdate',
+	        value: function onbeforeupdate(vnode) {
+	            // Set navDirection to component state
+	            this.navDirection = vnode.attrs.navDirection;
 
-	};
+	            // Checks to see if the client has finished transitioning in and is ready to be transitioned out
+	            if (this.clientSet) {
+	                if (this.navDirection == 'next') {
+	                    this.container.classList.add('content-container--transition-out--next');
+	                    this.container.classList.remove('content-container--transition-in--next');
+	                } else if (this.navDirection == 'prev') {
+	                    this.container.classList.add('content-container--transition-out--prev');
+	                    this.container.classList.remove('content-container--transition-in--prev');
+	                }
 
-	module.exports = ClientsModel;
+	                // Pauses the redraw for .5s to allow the transitions to finish
+	                setTimeout(_mithril2.default.redraw, 500);
 
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
+	                // Resets back to false so this conditional is bypassed when m.redraw is called
+	                this.clientSet = false;
 
-	"use strict";
-
-	var m = __webpack_require__(1);
-	var App = __webpack_require__(7);
-	var ClientModel = __webpack_require__(10);
-
-	var ClientView = {
-	    client: '',
-	    toggles: '',
-
-	    oninit: function oninit(vnode) {
-	        // Inform the client model of the current project based on the url slug
-	        ClientModel.setCurrentClientId(vnode.attrs.id);
-	    },
-
-	    oncreate: function oncreate(vnode) {
-	        // Transition the next and previous button in
-	        setTimeout(function () {
-	            this.toggles = document.getElementsByClassName("client-container__toggle");
-
-	            for (var i = 0; i < toggles.length; i++) {
-	                toggles[i].classList.add("client-container__toggle--transition-in");
+	                // This stops onupdate from being fired allowing the timeout to complete
+	                return false;
 	            }
-	        }, 500);
-	    },
-
-	    onbeforeupdate: function onbeforeupdate(vnode, old) {
-	        // When url updates we update the client model with the current project based on the url slug
-	        ClientModel.setCurrentClientId(vnode.attrs.id);
-
-	        // Update the client with new data based on the new project
-	        ClientModel.setClientData();
-	    },
-
-	    onupdate: function onupdate(vnode) {},
-
-	    onbeforeremove: function onbeforeremove(vnode) {
-	        // Inform the App model the view is about to be removed and transition out
-	        App.sendUpdate(new Event("pageState"));
-	        vnode.dom.classList.add("content-container--transition-out");
-
-	        for (var i = 0; i < toggles.length; i++) {
-	            toggles[i].classList.add("client-container__toggle--transition-out");
 	        }
+	    }, {
+	        key: 'onupdate',
+	        value: function onupdate(vnode) {
+	            // vnode.dom.scrollTo(0, 0)
 
-	        return new Promise(function (resolve) {
-	            setTimeout(resolve, 500);
-	        });
-	    },
+	            // Transition in content
+	            if (this.navDirection == 'next') {
+	                vnode.dom.classList.add('content-container--transition-in--next');
+	                vnode.dom.classList.remove('content-container--transition-out--next');
+	            } else if (this.navDirection == 'prev') {
+	                vnode.dom.classList.add('content-container--transition-in--prev');
+	                vnode.dom.classList.remove('content-container--transition-out--prev');
+	            }
 
-	    view: function view(vnode) {
-	        return m(
-	            "section",
-	            { id: "content-container", "class": "content-container client-container" },
-	            vnode.children,
-	            m(
-	                "a",
-	                { href: "/client/" + ClientModel.prevClient.slug, oncreate: m.route.link, "class": "client-container__toggle client-container__toggle-shadow--size-8 client-container__prev" },
-	                m(
-	                    "div",
-	                    { "class": "client-container__toggle__arrow" },
-	                    m(
-	                        "svg",
-	                        { xmlns: "http://www.w3.org/2000/svg", width: "21", height: "25", viewBox: "0 0 21 25" },
-	                        m("path", { d: "M13.8 25H21L7.2 12.5 21 0H13.8L0 12.5Z", "stroke-width": "0.3" })
-	                    )
-	                )
-	            ),
-	            m(
-	                "a",
-	                { href: "/client/" + ClientModel.nextClient.slug, oncreate: m.route.link, "class": "client-container__toggle client-container__toggle-shadow--size-8 client-container__next" },
-	                m(
-	                    "div",
-	                    { "class": "client-container__toggle__arrow" },
-	                    m(
-	                        "svg",
-	                        { xmlns: "http://www.w3.org/2000/svg", width: "21", height: "25", viewBox: "0 0 21 25" },
-	                        m("path", { d: "M7.2 0H0L13.8 12.5 0 25H7.2L21 12.5Z", "stroke-width": "0.3" })
-	                    )
-	                )
-	            )
-	        );
-	    }
-	};
+	            setTimeout(function () {
+	                vnode.dom.classList.remove('content-container--transition-in--next');
+	                vnode.dom.classList.remove('content-container--transition-in--prev');
+	            }, 500);
 
-	module.exports = ClientView;
+	            // Get the container dom element
+	            // it will be used during transition out since onbeforeupdate's vnode does not contain a dom
+	            this.container = vnode.dom;
 
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var m = __webpack_require__(1);
-	var Nav = __webpack_require__(13);
-	var App = __webpack_require__(7);
-	var ClientModel = __webpack_require__(10);
-
-	var Layout = {
-	    oninit: function oninit(vnode) {
-	        var self = this;
-
-	        // Load in client data
-	        ClientModel.loadList(vnode.attrs.id);
-
-	        // Add event listeners for the navigation and page state
-	        window.addEventListener('navState', function (e) {
-	            self.moveForNav(App.navState());
-	        }, false);
-
-	        window.addEventListener('pageState', function (e) {
-	            App.updateNav(false);
-	        }, false);
-	    },
-
-	    view: function view(vnode) {
-	        // var self = this;
-
-	        return m(
-	            "main",
-	            { "class": "layout" },
-	            vnode.children
-	        );
-	    },
-
-	    onMenuButtonClick: function onMenuButtonClick() {
-	        App.toggleNav();
-	    },
-
-	    moveForNav: function moveForNav(navState) {
-	        // Move the content container to position based on state of nav
-	        App.setContentContainer(document.getElementById("content-container"));
-	        navState ? App.contentContainer.classList.add('content-container--nav-open') : App.contentContainer.classList.remove('content-container--nav-open');
-	    }
-	};
-
-	module.exports = Layout;
-
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	// Nav
-	var m = __webpack_require__(1);
-	var App = __webpack_require__(7);
-	var ClientModel = __webpack_require__(10);
-
-	var Nav = {
-	    oninit: function oninit(vnode) {
-	        var self = this;
-
-	        window.addEventListener('navState', function (e) {
-	            vnode.state.open(App.navState());
-	        }, false);
-	    },
-
-	    oncreate: function oncreate(vnode) {
-	        this.el = vnode.dom;
-	    },
-
-	    view: function view() {
-	        return m(
-	            "nav",
-	            { id: "nav", "class": "nav" },
-	            m(
-	                "ul",
-	                null,
-	                m(
-	                    "li",
-	                    null,
-	                    m(
-	                        "a",
-	                        { href: "#!/" },
-	                        "HOME"
-	                    )
-	                ),
-	                m(
-	                    "li",
-	                    null,
-	                    m(
-	                        "a",
-	                        { href: "#!/contact" },
-	                        "CONTACT"
-	                    )
-	                )
-	            )
-	        );
-	    },
-
-	    // open the nav
-	    // TODO: needs rework
-	    open: function open(navState) {
-	        navState ? this.el.style.right = "0px" : this.el.style.right = "-300px";
-	    }
-	};
-
-	module.exports = Nav;
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var m = __webpack_require__(1);
-	var ClientModel = __webpack_require__(10);
-	var App = __webpack_require__(7);
-
-	var ClientChildView = {
-	    navHold: false,
-	    oninit: function oninit(vnode) {
-	        // Get the initial state of the child view
-	        this.initial = vnode.attrs.initial;
-
-	        // TODO Refactor when nav functionality is rebuilt
-	        var self = this;
-	        window.addEventListener('navState', function (e) {
-	            self.navHold = true;
-	        }, false);
-	    },
-
-	    oncreate: function oncreate(vnode) {
-	        // Transition in
-	        vnode.dom.classList.remove('content-container--transition-out');
-	        vnode.dom.classList.add('content-container--transition-in');
-	    },
-
-	    onbeforeupdate: function onbeforeupdate(vnode, old) {
-	        //TODO Make this better
-
-	        // TODO Refactor when nav functionality is rebuilt
-	        if (this.navHold) {
-	            this.navHold = false;
-	            return false;
+	            // Set to true to allow the next client to transition in
+	            this.clientSet = true;
 	        }
-
-	        // Checks initial boolean to determine if we are holding or transitioning out
-	        if (this.initial) {
-	            this.initial = false;
-	        } else {
-	            this.transitionOut(vnode);
-	            return false;
-	        }
-	    },
-
-	    onupdate: function onupdate(vnode) {
-	        // Transition in content
-	        vnode.dom.classList.remove('content-container--transition-out');
-	        vnode.dom.classList.add('content-container--transition-in');
-	    },
-
-	    transitionOut: function transitionOut() {
-	        // Transition out content
-	        document.getElementById('client-container__clients').classList.remove('content-container--transition-in');
-	        document.getElementById('client-container__clients').classList.add('content-container--transition-out');
-	        this.initial = true;
-
-	        // We hold for .5s here in order to allow the content to transition out before we redraw the dom and transition in new client content
-	        setTimeout(m.redraw, 500);
-	    },
-
-	    view: function view(vnode) {
-	        return m(
-	            "div",
-	            { id: "client-container__clients", "class": "client-container__clients" },
-	            'title' in ClientModel.currentClient && m(
-	                "div",
-	                { "class": "client-container__clients__content" },
-	                m(
-	                    "span",
-	                    null,
-	                    m("img", { src: ClientModel.currentClient.images.hero, "class": "client-container__clients__content__hero" }),
-	                    m(
-	                        "div",
-	                        { "class": "client-container__clients__content__title client-container__clients__content__title--shadow-size-8" },
-	                        ClientModel.currentClient.title
+	    }, {
+	        key: 'view',
+	        value: function view(vnode) {
+	            return (0, _mithril2.default)(
+	                'div',
+	                { id: 'client-container__clients', 'class': 'client-container__clients' },
+	                'title' in _ClientModel2.default.currentClient && (0, _mithril2.default)(
+	                    'div',
+	                    { 'class': 'client-container__clients__content' },
+	                    (0, _mithril2.default)(
+	                        'span',
+	                        null,
+	                        (0, _mithril2.default)('img', { src: _ClientModel2.default.currentClient.images.hero, 'class': 'client-container__clients__content__hero' }),
+	                        (0, _mithril2.default)(
+	                            'div',
+	                            { 'class': 'client-container__clients__content__title client-container__clients__content__title--shadow-size-8' },
+	                            _ClientModel2.default.currentClient.title
+	                        )
 	                    ),
-	                    m(
-	                        "div",
-	                        { "class": "client-container__clients__content__role" },
-	                        ClientModel.currentClient.role
+	                    (0, _mithril2.default)(
+	                        'div',
+	                        { 'class': 'client-container__clients__content__attributes' },
+	                        (0, _mithril2.default)(
+	                            'div',
+	                            { 'class': 'client-container__clients__content__attributes__container client-container__clients__content__attributes__container--box-shadow', style: "background-color:" + _ClientModel2.default.currentClient.color },
+	                            (0, _mithril2.default)(
+	                                'p',
+	                                { 'class': 'client-container__clients__content__attributes__container__desc' },
+	                                '// Agency'
+	                            ),
+	                            (0, _mithril2.default)(
+	                                'p',
+	                                { 'class': 'client-container__clients__content__attributes__container__copy' },
+	                                _ClientModel2.default.currentClient.agency
+	                            )
+	                        ),
+	                        (0, _mithril2.default)(
+	                            'div',
+	                            { 'class': 'client-container__clients__content__attributes__container client-container__clients__content__attributes__container--box-shadow', style: "background-color:" + _ClientModel2.default.currentClient.color },
+	                            (0, _mithril2.default)(
+	                                'p',
+	                                { 'class': 'client-container__clients__content__attributes__container__desc' },
+	                                '// Project(s)'
+	                            ),
+	                            (0, _mithril2.default)(
+	                                'p',
+	                                { 'class': 'client-container__clients__content__attributes__container__copy' },
+	                                _ClientModel2.default.currentClient.project
+	                            )
+	                        ),
+	                        (0, _mithril2.default)(
+	                            'div',
+	                            { 'class': 'client-container__clients__content__attributes__container client-container__clients__content__attributes__container--box-shadow', style: "background-color:" + _ClientModel2.default.currentClient.color },
+	                            (0, _mithril2.default)(
+	                                'p',
+	                                { 'class': 'client-container__clients__content__attributes__container__desc' },
+	                                '// Role'
+	                            ),
+	                            (0, _mithril2.default)(
+	                                'p',
+	                                { 'class': 'client-container__clients__content__attributes__container__copy' },
+	                                _ClientModel2.default.currentClient.role
+	                            )
+	                        ),
+	                        (0, _mithril2.default)(
+	                            'div',
+	                            { 'class': 'client-container__clients__content__attributes__container client-container__clients__content__attributes__container--box-shadow', style: "background-color:" + _ClientModel2.default.currentClient.color },
+	                            (0, _mithril2.default)(
+	                                'p',
+	                                { 'class': 'client-container__clients__content__attributes__container__desc' },
+	                                '// Technologies'
+	                            ),
+	                            (0, _mithril2.default)(
+	                                'p',
+	                                { 'class': 'client-container__clients__content__attributes__container__copy' },
+	                                _ClientModel2.default.currentClient.technologies
+	                            )
+	                        )
 	                    )
 	                )
-	            )
-	        );
-	    }
-	};
+	            );
+	        }
+	    }]);
+
+	    return ClientChildView;
+	}();
+
 	module.exports = ClientChildView;
+
+	// "technologies": "HTML & CSS (Sass, Compass, Responsive Design)\r\nJavascript (Backbone, Raphael, Require, Three, Google Maps API, TweenMax)\r\nSVG",
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _mithril = __webpack_require__(1);
+
+	var _mithril2 = _interopRequireDefault(_mithril);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var ContactView = function () {
+	    function ContactView() {
+	        _classCallCheck(this, ContactView);
+	    }
+
+	    _createClass(ContactView, null, [{
+	        key: "oncreate",
+	        value: function oncreate(vnode) {
+	            // Wait for transition in animation to complere (.5s) and remove the class
+	            setTimeout(function () {
+	                vnode.dom.classList.remove("content-container--transition-in--next");
+	            }, 500);
+	        }
+	    }, {
+	        key: "onbeforeremove",
+	        value: function onbeforeremove(vnode) {
+	            // Add transition out class to dom container
+	            vnode.dom.classList.add("content-container--transition-out--next");
+
+	            // This hold's the mithril lifecycle until the transition animation complextes
+	            // On complete the onremove method is called and this view is destroyed
+	            return new Promise(function (resolve) {
+	                setTimeout(resolve, 500);
+	            });
+	        }
+	    }, {
+	        key: "view",
+	        value: function view() {
+	            return (0, _mithril2.default)(
+	                "section",
+	                { id: "content-container", "class": "content-container contact-container content-container--transition-in--next" },
+	                (0, _mithril2.default)(
+	                    "div",
+	                    { "class": "contact-container__holder" },
+	                    (0, _mithril2.default)(
+	                        "div",
+	                        { "class": "contact-container__information" },
+	                        (0, _mithril2.default)(
+	                            "h2",
+	                            { "class": "contact-container__title__name contact-container__title--text-shadow--size-8" },
+	                            "CONTACT"
+	                        ),
+	                        (0, _mithril2.default)(
+	                            "div",
+	                            { "class": "contact-container__information__content-container contact-container__information__content-container--photo" },
+	                            (0, _mithril2.default)("img", { "class": "contact-container__information__photo", src: "assets/images/picture-chuck.jpg", alt: "Chuck Masucci" })
+	                        ),
+	                        (0, _mithril2.default)(
+	                            "div",
+	                            { "class": "contact-container__information__content-container contact-container__information__content-container--text" },
+	                            (0, _mithril2.default)(
+	                                "div",
+	                                { "class": "contact-container__information__content-container__content-items" },
+	                                (0, _mithril2.default)(
+	                                    "div",
+	                                    { "class": "contact-container__information__content-container__content-item" },
+	                                    (0, _mithril2.default)(
+	                                        "div",
+	                                        { "class": "contact-container__information__content-container__content-item--title" },
+	                                        "// Email"
+	                                    ),
+	                                    (0, _mithril2.default)(
+	                                        "div",
+	                                        { "class": "contact-container__information__content-container__content-item--link" },
+	                                        (0, _mithril2.default)(
+	                                            "a",
+	                                            { href: "mailto:cmasucci@gmail.com" },
+	                                            "cmasucci@gmail.com"
+	                                        )
+	                                    )
+	                                ),
+	                                (0, _mithril2.default)(
+	                                    "div",
+	                                    { "class": "contact-container__information__content-container__content-item" },
+	                                    (0, _mithril2.default)(
+	                                        "div",
+	                                        { "class": "contact-container__information__content-container__content-item--title" },
+	                                        "// LinkedIn"
+	                                    ),
+	                                    (0, _mithril2.default)(
+	                                        "div",
+	                                        { "class": "contact-container__information__content-container__content-item--link" },
+	                                        (0, _mithril2.default)(
+	                                            "a",
+	                                            { href: "http://linkedin.com/in/chuckmasucci/", target: "_blank" },
+	                                            "linkedin.com/in/chuckmasucci"
+	                                        )
+	                                    )
+	                                ),
+	                                (0, _mithril2.default)(
+	                                    "div",
+	                                    { "class": "contact-container__information__content-container__content-item" },
+	                                    (0, _mithril2.default)(
+	                                        "div",
+	                                        { "class": "contact-container__information__content-container__content-item--title" },
+	                                        "// Resume"
+	                                    ),
+	                                    (0, _mithril2.default)(
+	                                        "div",
+	                                        { "class": "contact-container__information__content-container__content-item--link" },
+	                                        (0, _mithril2.default)(
+	                                            "a",
+	                                            { href: "https://www.dropbox.com/s/9ln2fihrpa4fhxi/Resume-Chuck_Masucci.pdf?dl=1", target: "_blank" },
+	                                            "Download PDF"
+	                                        )
+	                                    )
+	                                )
+	                            )
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return ContactView;
+	}();
+
+	module.exports = ContactView;
 
 /***/ }
 /******/ ]);
